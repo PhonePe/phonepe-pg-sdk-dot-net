@@ -53,39 +53,7 @@ public class CustomCheckoutClient : BaseClient
         ILoggerFactory? loggerFactory = null
     )
     {
-        if (_client != null)
-        {
-            var requestedClientSHA = CommonUtils.CalculateSha256(new Dictionary<string, string>
-            {
-                { ClientConstants.CLIENT_ID, clientId },
-                { ClientConstants.CLIENT_SECRET, clientSecret },
-                { ClientConstants.CLIENT_VERSION, clientVersion.ToString() },
-                { ClientConstants.ENV, env.ToString() },
-                { ClientConstants.PAYMENT_FLOW_TYPE, PaymentFlowType.PG.ToString() }
-            });
-
-            var cachedClientSHA = CommonUtils.CalculateSha256(new Dictionary<string, string>
-            {
-                { ClientConstants.CLIENT_ID, _client.MerchantConfig.ClientId },
-                { ClientConstants.CLIENT_SECRET, _client.MerchantConfig.ClientSecret },
-                { ClientConstants.CLIENT_VERSION, _client.MerchantConfig.ClientVersion.ToString() },
-                { ClientConstants.ENV, env.ToString() },
-                { ClientConstants.PAYMENT_FLOW_TYPE, PaymentFlowType.PG.ToString() }
-            });
-
-            if (requestedClientSHA == cachedClientSHA)
-            {
-                return _client;
-            }
-
-            throw new PhonePeException($"Client instance already exists with different parameters: {nameof(CustomCheckoutClient)}");
-        }
-
-        lock (_lock)
-        {
-            _client ??= new CustomCheckoutClient(clientId, clientSecret, clientVersion, env, loggerFactory);
-            return _client;
-        }
+        return new CustomCheckoutClient(clientId, clientSecret, clientVersion, env, loggerFactory);
     }
 
     /*

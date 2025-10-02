@@ -28,8 +28,8 @@ public class TokenService
     private readonly ILogger<TokenService> _logger;
     private readonly ILogger<HttpCommand<OAuthResponse, Dictionary<string, string>>> _httpCommandLogger;
     private readonly EnvConfig _envConfig;
-    private static OAuthResponse? _cachedToken;
-    private static readonly SemaphoreSlim _semaphore = new(1, 1);
+    private OAuthResponse? _cachedToken;
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     public TokenService(CredentialConfig credentialConfig, ILoggerFactory loggerFactory, EnvConfig envConfig)
     {
@@ -137,7 +137,7 @@ public class TokenService
         }
     }
 
-    private static bool IsCachedTokenValid()
+    private bool IsCachedTokenValid()
     {
         if (_cachedToken == null)
         {
@@ -150,7 +150,7 @@ public class TokenService
         return currentTime < reloadTime;
     }
 
-    private static string FormatCachedToken()
+    private string FormatCachedToken()
     {
         return $"{_cachedToken?.TokenType} {_cachedToken?.AccessToken}";
     }

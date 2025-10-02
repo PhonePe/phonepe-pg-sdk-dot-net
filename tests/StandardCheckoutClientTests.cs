@@ -46,35 +46,6 @@ public class StandardCheckoutClientTests : BaseSetupWithOAuth
             { "grant_type", "client_credentials" }
         };
     }
-    [Test, Order(1)]
-    public void SingletonViaGetInstance()
-    {
-        var client1 = standardCheckoutClient;
-        var client2 = standardCheckoutClient;
-
-        Assert.That(client1, Is.EqualTo(client2), "Singleton instances should be equal");
-    }
-
-    [Test, Order(2)]
-    public void SingletonWithDifferentParameters()
-    {
-        var client1 = standardCheckoutClient;
-
-        Env env = Env.TESTING;
-
-        var exception = Assert.Throws<PhonePeException>(() =>
-        {
-            var client2 = StandardCheckoutClient.GetInstance(
-                "client_id1",
-                "client_secret1",
-                1,
-                env
-            );
-        });
-
-        Assert.That(exception, Is.InstanceOf<PhonePeException>());
-        Assert.That(exception.Message, Is.EqualTo("Client instance already exists with different parameters: StandardCheckoutClient"));
-    }
 
     [Test, Order(3)]
     public async Task MultipleClientsSingleAuthCall()
