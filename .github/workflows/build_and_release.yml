@@ -29,7 +29,9 @@ jobs:
 
             - name: Publish project
               run: |
-                  dotnet publish src/pg-sdk-dotnet.csproj --no-build -c Release -o ./publish
+                  dotnet restore
+                  dotnet build --configuration Release
+                  dotnet test --configuration Release --logger "junit;LogFileName=tests/TestResults/test_results.xml"
 
             - name: Upload publish artifact
               uses: actions/upload-artifact@v4
