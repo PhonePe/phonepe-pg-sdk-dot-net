@@ -10,7 +10,7 @@ on:
 
 jobs:
     build_and_test:
-        name: Build .NET Project
+        name: Build and Test .NET Project
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -29,3 +29,42 @@ jobs:
 
             - name: Test
               run: dotnet test --configuration Release --logger "junit;LogFileName=tests/TestResults/test_results.xml"
+
+    release:
+        name: Pack and Release NuGet
+        runs-on: ubuntu-latest
+        needs: build_and_test
+        if: |
+            github.ref == 'refs/heads/main' &&
+            !contains(github.actor, 'gitlab-runner') &&
+            !contains(github.actor, 'Release Bot')
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup .NET SDK
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: '8.0.x'
+
+            - name: Run pack script
+              run: |
+                  echo "GitHub variables - branch=${{ github.ref_name }}, author=${{ github.actor }}"
+                  chmod +x scripts/pack.sh
+                  ./scripts/pack.sh
+
+            - name: Extract version
+              run: |
+                  # Path from your original script. Update if needed.
+                  VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" src/pg-sdk-dotnet.csproj)
+                  echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+            - name: Push to NuGet
+              env:
+                  NUGET_URL: ${{ secrets.NUGET_SOURCE_URL }}
+                  NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+              run: |
+                  echo "Pushing version ${{ env.VERSION }} to NuGet PROD..."
+                  # The glob pattern "*.nupkg" will find the package in the specified directory
+                  dotnet nuget push "src/bin/Release/*.nupkg" --source "$NUGET_URL" --api-key "$NUGET_KEY" --skip-duplicate
