@@ -24,6 +24,7 @@ public class CreateSdkOrderRequest
     public MetaInfo? MetaInfo { get; }
     public long? ExpireAfter { get; }
     public List<InstrumentConstraint>? Constraints { get; }
+    public bool DisablePaymentRetry { get; }
 
     public CreateSdkOrderRequest(
         string merchantOrderId,
@@ -31,7 +32,8 @@ public class CreateSdkOrderRequest
         PaymentFlow paymentFlow,
         MetaInfo? metaInfo,
         long? expireAfter,
-        List<InstrumentConstraint>? constraints)
+        List<InstrumentConstraint>? constraints,
+        bool disablePaymentRetry)
     {
         MerchantOrderId = merchantOrderId;
         Amount = amount;
@@ -39,6 +41,7 @@ public class CreateSdkOrderRequest
         MetaInfo = metaInfo;
         ExpireAfter = expireAfter;
         Constraints = constraints;
+        DisablePaymentRetry = disablePaymentRetry;
     }
 
     public static StandardCheckoutBuilder StandardCheckoutBuilder()
@@ -60,6 +63,7 @@ public class StandardCheckoutBuilder
     private string _message = string.Empty;
     private string _redirectUrl = string.Empty;
     private long? _expireAfter;
+    private bool _disablePaymentRetry;
 
     public StandardCheckoutBuilder SetMerchantOrderId(string merchantOrderId)
     {
@@ -97,6 +101,12 @@ public class StandardCheckoutBuilder
         return this;
     }
 
+    public StandardCheckoutBuilder SetDisablePaymentRetry(bool disablePaymentRetry)
+    {
+        this._disablePaymentRetry = disablePaymentRetry;
+        return this;
+    }
+
     public CreateSdkOrderRequest Build()
     {
         MerchantUrls MerchantUrls = MerchantUrls.Builder()
@@ -114,7 +124,8 @@ public class StandardCheckoutBuilder
             paymentFlow,
             this._metaInfo,
             this._expireAfter,
-            null
+            null,
+            this._disablePaymentRetry
         );
     }
 }
@@ -127,6 +138,7 @@ public class CustomCheckoutBuilder
     private MetaInfo? _metaInfo;
     private long? _expireAfter;
     private List<InstrumentConstraint>? _constraints;
+    private bool _disablePaymentRetry;
 
     public CustomCheckoutBuilder SetMerchantOrderId(string merchantOrderId)
     {
@@ -158,6 +170,12 @@ public class CustomCheckoutBuilder
         return this;
     }
 
+    public CustomCheckoutBuilder SetDisablePaymentRetry(bool disablePaymentRetry)
+    {
+        this._disablePaymentRetry = disablePaymentRetry;
+        return this;
+    }
+
     public CreateSdkOrderRequest Build()
     {
         PaymentFlow paymentFlow= PgPaymentFlow.Builder()
@@ -169,7 +187,8 @@ public class CustomCheckoutBuilder
             paymentFlow,
             this._metaInfo,
             this._expireAfter,
-            this._constraints
+            this._constraints,
+            this._disablePaymentRetry
         );
     }
 }
