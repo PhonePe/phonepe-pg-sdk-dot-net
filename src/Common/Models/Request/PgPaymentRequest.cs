@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using System.Text.Json.Serialization;
+
 namespace pg_sdk_dotnet.Common.Models.Request;
 
 /**
@@ -34,7 +36,8 @@ namespace pg_sdk_dotnet.Common.Models.Request;
      MetaInfo? metaInfo = null,
      List<InstrumentConstraint>? constraints = null,
      DeviceContext? deviceContext = null,
-     long? expireAt = null)
+     long? expireAt = null,
+     string? deviceOS = null)
 {
     public string MerchantOrderId { get; } = merchantOrderId;
     public long Amount { get; } = amount;
@@ -44,6 +47,7 @@ namespace pg_sdk_dotnet.Common.Models.Request;
     public DeviceContext? DeviceContext { get; } = deviceContext;
     public long? ExpireAfter { get; } = expireAfter;
     public long? ExpireAt { get; } = expireAt;
+    [JsonIgnore] public string? DeviceOS { get; } = deviceOS;
 
     public static UpiIntentPayRequestBuilder UpiIntentPayRequestBuilder()
     {

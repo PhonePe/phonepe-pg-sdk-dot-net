@@ -65,10 +65,14 @@ public class CustomCheckoutClient : BaseClient
 
         try 
         {
+            var requestHeaders = payRequest.DeviceOS != null
+                ? new Dictionary<string, string>(this._headers) { [Headers.X_DEVICE_OS] = payRequest.DeviceOS }
+                : this._headers;
+
             var response =  await RequestViaAuthRefreshAsync<CustomCheckoutPayResponse, PgPaymentRequest>(
                 HttpMethodType.POST,
                 url,
-                this._headers,
+                requestHeaders,
                 Headers.APPLICATION_JSON,
                 payRequest
             );

@@ -19,7 +19,7 @@ public class Headers
 {
     public static readonly string INTEGRATION = "API";
     public static readonly string API_VERSION = "V2";
-    public static readonly string SDK_VERSION = "2.1.1";
+    public static readonly string SDK_VERSION = "2.1.2";
     public static readonly string SDK_TYPE = "BACKEND_DOTNET_SDK";
     public static readonly string SOURCE = "x-source";
     public static readonly string SOURCE_VERSION = "x-source-version";
@@ -29,6 +29,7 @@ public class Headers
     public static readonly string CONTENT_TYPE = "Content-Type";
     public static readonly string ACCEPT = "Accept";
     public static readonly string APPLICATION_JSON = "application/json";
+    public static readonly string X_DEVICE_OS = "x-device-os";
     public static readonly string APPLICATION_FORM_URLENCODED =
       "application/x-www-form-urlencoded";
 }

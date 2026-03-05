@@ -15,6 +15,8 @@
 */
 
 using NUnit.Framework;
+using pg_sdk_dotnet.Common.Constants;
+using pg_sdk_dotnet.Payments.v2.CustomCheckout;
 
 namespace pg_sdk_dotnet.tests;
 
@@ -76,6 +78,84 @@ public class CustomPayTest : BaseSetupWithOAuth
         Assert.That(result.State, Is.EqualTo("PENDING"));
         Assert.That(result.RedirectUrl, Is.EqualTo("https://google.com"));
 
+    }
+
+    [Test, Order(2)]
+    public async Task TestCustomPayUpiCollectWithXDeviceOsHeader()
+    {
+        string url = CustomCheckoutConstants.PAY_API;
+
+        OAuthSetup();
+
+        var request = PgPaymentRequest.UpiCollectPayViaVpaRequestBuilder()
+            .SetMerchantOrderId("merchantOrderId")
+            .SetAmount(100)
+            .SetVpa("test@upi")
+            .SetDeviceOS("ANDROID")
+            .Build();
+
+        var customCheckoutResponse = new CustomCheckoutPayResponse
+        {
+            OrderId = "orderId",
+            State = "PENDING",
+            ExpireAt = 300,
+            RedirectUrl = "https://google.com"
+        };
+
+        var headers = new Dictionary<string, string>(GetHeadersForPostReq()) { [Headers.X_DEVICE_OS] = "ANDROID" };
+
+        AddStubForPostRequest(url, headers, request, 200, new Dictionary<string, string>(), customCheckoutResponse);
+
+        var result = await customCheckoutClient.Pay(request);
+        Assert.That(result.OrderId, Is.EqualTo("orderId"));
+        Assert.That(result.State, Is.EqualTo("PENDING"));
+        Assert.That(result.RedirectUrl, Is.EqualTo("https://google.com"));
+    }
+
+    [Test, Order(3)]
+    public async Task TestCustomPayUpiCollectWithoutXDeviceOsHeader()
+    {
+        string url = CustomCheckoutConstants.PAY_API;
+
+        OAuthSetup();
+
+        var request = PgPaymentRequest.UpiCollectPayViaVpaRequestBuilder()
+            .SetMerchantOrderId("merchantOrderId")
+            .SetAmount(100)
+            .SetVpa("test@upi")
+            .Build();
+
+        var customCheckoutResponse = new CustomCheckoutPayResponse
+        {
+            OrderId = "orderId",
+            State = "PENDING",
+            ExpireAt = 300,
+            RedirectUrl = "https://google.com"
+        };
+
+        var headers = GetHeadersForPostReq();
+
+        AddStubForPostRequest(url, headers, request, 200, new Dictionary<string, string>(), customCheckoutResponse);
+
+        var result = await customCheckoutClient.Pay(request);
+        Assert.That(result.OrderId, Is.EqualTo("orderId"));
+        Assert.That(result.State, Is.EqualTo("PENDING"));
+        Assert.That(result.RedirectUrl, Is.EqualTo("https://google.com"));
+    }
+
+    [Test, Order(4)]
+    public void TestCustomPayUpiCollectXDeviceOsNotInRequestBody()
+    {
+        var request = PgPaymentRequest.UpiCollectPayViaVpaRequestBuilder()
+            .SetMerchantOrderId("merchantOrderId")
+            .SetAmount(100)
+            .SetVpa("test@upi")
+            .SetDeviceOS("ANDROID")
+            .Build();
+
+        var json = System.Text.Json.JsonSerializer.Serialize(request);
+        Assert.That(json, Does.Not.Contain("DeviceOS"));
+        Assert.That(json, Does.Not.Contain("deviceOS"));
     }
 
 }
