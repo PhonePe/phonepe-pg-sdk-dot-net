@@ -121,7 +121,7 @@ public class StandardCheckoutPayRequestBuilder
         return this;
     }
 
-    public StandardCheckoutPayRequestBuilder SetPrefillUserLoginDetails(PrefillUserLoginDetails prefillUserLoginDetails)
+    public StandardCheckoutPayRequestBuilder SetPrefillUserLoginDetails(PrefillUserLoginDetails? prefillUserLoginDetails)
     {
         this._prefillUserLoginDetails = prefillUserLoginDetails;
         return this;

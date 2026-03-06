@@ -16,6 +16,7 @@
 
 using System.Text.Json;
 using NUnit.Framework;
+using pg_sdk_dotnet.Payments.v2.StandardCheckout;
 
 namespace pg_sdk_dotnet.tests;
 
@@ -304,8 +305,8 @@ public class PrefillUserLoginDetailsTests : BaseSetupWithOAuth
         Assert.That(payRequest.DisablePaymentRetry, Is.True);
 
         var json = System.Text.Json.JsonSerializer.Serialize(payRequest);
-        Assert.That(json, Does.Contain("disablePaymentRetry"));
-        Assert.That(json, Does.Contain("prefillUserLoginDetails"));
+        Assert.That(json, Does.Contain("DisablePaymentRetry"));
+        Assert.That(json, Does.Contain("PrefillUserLoginDetails"));
 
         var headers = GetHeadersForPostReq();
         AddStubForPostRequest(url, headers, payRequest, 200, new Dictionary<string, string>(), MockPayResponse);
