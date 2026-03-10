@@ -43,6 +43,12 @@ public class PrefillUserLoginDetailsBuilder
 
     public PrefillUserLoginDetails Build()
     {
+        if (this._phoneNumber != null)
+        {
+            if (this._phoneNumber.Length == 0)
+                throw new ArgumentException("PhoneNumber must not be empty.", nameof(_phoneNumber));
+        }
+
         return new PrefillUserLoginDetails(this._phoneNumber);
     }
 }

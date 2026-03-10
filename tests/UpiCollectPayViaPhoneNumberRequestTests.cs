@@ -14,7 +14,9 @@
 * limitations under the License.
 */
 
+using System.Text.Json;
 using NUnit.Framework;
+using pg_sdk_dotnet.Common.Utils;
 
 namespace pg_sdk_dotnet.tests;
 
@@ -57,5 +59,32 @@ public class UpiCollectPayViaPhoneNumberRequestTests
 
         var phoneDetails = (PhoneNumberCollectPaymentDetails)instrument.Details;
         Assert.That(phoneDetails.PhoneNumber, Is.EqualTo("9876543210"));
+    }
+
+    [Test]
+    public void Build_PhoneNumberSerialisesToWireFormat_PhoneNumberNotDropped()
+    {
+        var request = new UpiCollectPayViaPhoneNumberRequestBuilder()
+            .SetMerchantOrderId("order456")
+            .SetAmount(500)
+            .SetPhoneNumber("9876543210")
+            .Build();
+
+        var json = JsonSerializer.Serialize(request, JsonOptions.IndentedWithPaymentConverters);
+        using var doc = JsonDocument.Parse(json);
+
+        // Navigate: paymentFlow -> paymentMode -> details -> phoneNumber
+        var details = doc.RootElement
+            .GetProperty("paymentFlow")
+            .GetProperty("paymentMode")
+            .GetProperty("details");
+
+        Assert.That(details.TryGetProperty("phoneNumber", out var phoneProp), Is.True,
+            "phoneNumber must be present in the serialized wire payload");
+        Assert.That(phoneProp.GetString(), Is.EqualTo("9876543210"));
+
+        Assert.That(details.TryGetProperty("type", out var typeProp), Is.True,
+            "type must be present as a string, not an integer");
+        Assert.That(typeProp.GetString(), Is.EqualTo("PHONE_NUMBER"));
     }
 }

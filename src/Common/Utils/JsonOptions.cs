@@ -16,6 +16,7 @@
 
 namespace pg_sdk_dotnet.Common.Utils;
 
+using pg_sdk_dotnet.Common.Models.Request.JsonConverters;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -39,6 +40,7 @@ public static class JsonOptions
             new PaymentInstrumentConverter(),
             new PaymentRailConverter(),
             new PaymentModeConstraintConverter(),
+            new CollectPaymentDetailsConverter(),
             new PaymentFlowJsonConverter()
         }
     };

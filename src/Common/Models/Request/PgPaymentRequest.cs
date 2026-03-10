@@ -47,7 +47,7 @@ namespace pg_sdk_dotnet.Common.Models.Request;
     public DeviceContext? DeviceContext { get; } = deviceContext;
     public long? ExpireAfter { get; } = expireAfter;
     public long? ExpireAt { get; } = expireAt;
-    [JsonIgnore] public string? DeviceOS { get; } = deviceOS;
+    [JsonIgnore] public string? DeviceOS { get; } = deviceOS; // x-device-os header is required on for UPI_COLLECT requests as per the API design
 
     public static UpiIntentPayRequestBuilder UpiIntentPayRequestBuilder()
     {

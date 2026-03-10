@@ -16,6 +16,7 @@
 
 using System.Text.Json;
 using NUnit.Framework;
+using pg_sdk_dotnet.Common.Utils;
 using pg_sdk_dotnet.Payments.v2.StandardCheckout;
 
 namespace pg_sdk_dotnet.tests;
@@ -49,6 +50,26 @@ public class PrefillUserLoginDetailsTests : BaseSetupWithOAuth
             ClientVersion,
             Env.TESTING
         );
+    }
+
+    // ------------------------------------------------------------------ //
+    // Phone number validation tests                                        //
+    // ------------------------------------------------------------------ //
+
+    [Test]
+    public void TestBuildThrowsOnEmptyPhoneNumber()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            PrefillUserLoginDetails.Builder()
+                .SetPhoneNumber("")
+                .Build());
+    }
+
+    [Test]
+    public void TestBuildAllowsNullPhoneNumber()
+    {
+        Assert.DoesNotThrow(() =>
+            PrefillUserLoginDetails.Builder().Build());
     }
 
     // ------------------------------------------------------------------ //
@@ -304,9 +325,9 @@ public class PrefillUserLoginDetailsTests : BaseSetupWithOAuth
         Assert.That(payRequest.PrefillUserLoginDetails!.PhoneNumber, Is.EqualTo("9999999999"));
         Assert.That(payRequest.DisablePaymentRetry, Is.True);
 
-        var json = System.Text.Json.JsonSerializer.Serialize(payRequest);
-        Assert.That(json, Does.Contain("DisablePaymentRetry"));
-        Assert.That(json, Does.Contain("PrefillUserLoginDetails"));
+        var json = JsonSerializer.Serialize(payRequest, JsonOptions.IndentedWithPaymentConverters);
+        Assert.That(json, Does.Contain("disablePaymentRetry"));
+        Assert.That(json, Does.Contain("prefillUserLoginDetails"));
 
         var headers = GetHeadersForPostReq();
         AddStubForPostRequest(url, headers, payRequest, 200, new Dictionary<string, string>(), MockPayResponse);
