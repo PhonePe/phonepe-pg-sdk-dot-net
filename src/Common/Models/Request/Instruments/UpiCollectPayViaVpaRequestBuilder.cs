@@ -25,6 +25,7 @@ public class UpiCollectPayViaVpaRequestBuilder
     private string _vpa = null!;
     private string? _message;
     private long? _expireAfter;
+    private string? _deviceOS;
 
     /**
      * SETTERS
@@ -72,6 +73,12 @@ public class UpiCollectPayViaVpaRequestBuilder
         return this;
     }
 
+    public UpiCollectPayViaVpaRequestBuilder SetDeviceOS(string deviceOS)
+    {
+        this._deviceOS = deviceOS;
+        return this;
+    }
+
     public PgPaymentRequest Build()
     {
         var vpaDetails = VpaCollectPaymentDetails.Builder()
@@ -93,7 +100,8 @@ public class UpiCollectPayViaVpaRequestBuilder
             paymentFlow,
             this._expireAfter,
             this._metaInfo,
-            this._constraints
+            this._constraints,
+            deviceOS: this._deviceOS
         );
     }
 }

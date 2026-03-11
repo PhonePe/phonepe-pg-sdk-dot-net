@@ -1,7 +1,7 @@
 #!/bin/bash
 CSPROJ_FILE="src/pg-sdk-dotnet.csproj"
 PACKAGE_NAME="phonepe-pg-sdk-dotnet"
-VERSION="2.1.1"
+VERSION="2.1.2"
 OUT_DIR="../src/bin/Release"
 
 echo "Cleaning old packages..."

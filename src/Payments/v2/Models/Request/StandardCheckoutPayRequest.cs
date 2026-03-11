@@ -22,6 +22,8 @@ public class StandardCheckoutPayRequest
     public PaymentFlow PaymentFlow { get; }
     public MetaInfo? MetaInfo { get; }
     public long? ExpireAfter { get; }
+    public bool? DisablePaymentRetry { get; }
+    public PrefillUserLoginDetails? PrefillUserLoginDetails { get; }
 
     public StandardCheckoutPayRequest(
         string merchantOrderId,
@@ -30,12 +32,16 @@ public class StandardCheckoutPayRequest
         string? message,
         string? redirectUrl,
         PaymentModeConfig? paymentModeConfig,
-        long? expireAfter)
+        long? expireAfter,
+        bool? disablePaymentRetry = null,
+        PrefillUserLoginDetails? prefillUserLoginDetails = null)
     {
         MerchantOrderId = merchantOrderId;
         Amount = amount;
         MetaInfo = metaInfo;
         ExpireAfter = expireAfter;
+        DisablePaymentRetry = disablePaymentRetry;
+        PrefillUserLoginDetails = prefillUserLoginDetails;
 
         var merchantUrls = MerchantUrls.Builder()
             .SetRedirectUrl(redirectUrl)
@@ -64,6 +70,8 @@ public class StandardCheckoutPayRequestBuilder
     private string? _message;
     private PaymentModeConfig? _paymentModeConfig;
     private long? _expireAfter;
+    private bool? _disablePaymentRetry;
+    private PrefillUserLoginDetails? _prefillUserLoginDetails;
 
     public StandardCheckoutPayRequestBuilder SetMerchantOrderId(string merchantOrderId)
     {
@@ -107,6 +115,18 @@ public class StandardCheckoutPayRequestBuilder
         return this;
     }
 
+    public StandardCheckoutPayRequestBuilder SetDisablePaymentRetry(bool disablePaymentRetry)
+    {
+        this._disablePaymentRetry = disablePaymentRetry;
+        return this;
+    }
+
+    public StandardCheckoutPayRequestBuilder SetPrefillUserLoginDetails(PrefillUserLoginDetails? prefillUserLoginDetails)
+    {
+        this._prefillUserLoginDetails = prefillUserLoginDetails;
+        return this;
+    }
+
     public StandardCheckoutPayRequest Build()
     {
         return new StandardCheckoutPayRequest(
@@ -116,7 +136,9 @@ public class StandardCheckoutPayRequestBuilder
             this._message,
             this._redirectUrl,
             this._paymentModeConfig,
-            this._expireAfter
+            this._expireAfter,
+            this._disablePaymentRetry,
+            this._prefillUserLoginDetails
         );
     }
 }

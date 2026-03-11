@@ -11,7 +11,7 @@
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>phonepe-pg-sdk-dotnet</PackageId>
-    <Version>2.1.1</Version>
+    <Version>2.1.2</Version>
     <Authors>PhonePe</Authors>
     <Company>PhonePe</Company>
     <Description>PhonePe Payment Gateway for .NET integrations</Description>

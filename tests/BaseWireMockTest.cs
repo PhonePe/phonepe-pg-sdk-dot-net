@@ -16,6 +16,7 @@
 
 using System.Text.Json;
 using NUnit.Framework;
+using pg_sdk_dotnet.Common.Utils;
 using WireMock.Logging;
 using WireMock.Matchers;
 using WireMock.Server;
@@ -90,13 +91,7 @@ public abstract class BaseWireMockTest
 
     protected void AddStubForPostRequest(string urlPath, Dictionary<string, string> requestHeaders, object request, int status, Dictionary<string, string> responseHeaders, object response)
     {
-        var options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
-        };
-
-        var mappingBuilder = WireMock.RequestBuilders.Request.Create().WithPath(urlPath).UsingPost().WithBody(new JsonMatcher(JsonSerializer.Serialize(request, options)));
+        var mappingBuilder = WireMock.RequestBuilders.Request.Create().WithPath(urlPath).UsingPost().WithBody(new JsonMatcher(JsonSerializer.Serialize(request, JsonOptions.IndentedWithPaymentConverters)));
 
         foreach (var header in requestHeaders)
         {

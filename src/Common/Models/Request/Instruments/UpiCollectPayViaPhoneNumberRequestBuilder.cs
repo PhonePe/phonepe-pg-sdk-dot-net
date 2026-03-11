@@ -25,6 +25,7 @@ public class UpiCollectPayViaPhoneNumberRequestBuilder
     private List<InstrumentConstraint>? _constraints;
     private string _phoneNumber = string.Empty;
     private string? _message;
+    private string? _deviceOS;
     
 
     /**
@@ -73,6 +74,12 @@ public class UpiCollectPayViaPhoneNumberRequestBuilder
         return this;
     }
 
+    public UpiCollectPayViaPhoneNumberRequestBuilder SetDeviceOS(string deviceOS)
+    {
+        this._deviceOS = deviceOS;
+        return this;
+    }
+
     public PgPaymentRequest Build()
     {
         var phoneNumberDetails = PhoneNumberCollectPaymentDetails.Builder()
@@ -94,7 +101,8 @@ public class UpiCollectPayViaPhoneNumberRequestBuilder
             paymentFlow,
             this._expireAfter,
             this._metaInfo,
-            this._constraints
+            this._constraints,
+            deviceOS: this._deviceOS
         );
     }
 }
