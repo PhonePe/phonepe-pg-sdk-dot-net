@@ -51,11 +51,34 @@ public abstract class BaseClient
     /*
     * Executes an authenticated API request, refreshing the token if necessary.
     */
+    protected Task<T> RequestViaAuthRefreshAsync<T, R>(
+        HttpMethodType method,
+        string endpoint,
+        Dictionary<string, string> headers,
+        string encodingType,
+        R? requestData = default,
+        Dictionary<string, string>? queryParams = null)
+    {
+        return RequestViaAuthRefreshAsync<T, R>(
+            method,
+            endpoint,
+            headers,
+            encodingType,
+            this._envConfig.PgHostUrl,
+            requestData,
+            queryParams
+        );
+    }
+
+    /*
+    * Executes an authenticated API request with an explicit host URL, refreshing the token if necessary.
+    */
     protected async Task<T> RequestViaAuthRefreshAsync<T, R>(
         HttpMethodType method,
         string endpoint,
         Dictionary<string, string> headers,
         string encodingType,
+        string hostUrl,
         R? requestData = default,
         Dictionary<string, string>? queryParams = null)
     {
@@ -67,7 +90,7 @@ public abstract class BaseClient
         {
             var httpCommand = new HttpCommand<T, R>(
                 this._httpClient,
-                this._envConfig.PgHostUrl,
+                hostUrl,
                 endpoint,
                 httpHeaders,
                 requestData ?? default!,
@@ -87,7 +110,7 @@ public abstract class BaseClient
 
             var retryHttpCommand = new HttpCommand<T, R>(
                 this._httpClient,
-                this._envConfig.PgHostUrl,
+                hostUrl,
                 endpoint,
                 httpHeaders,
                 requestData ?? default!,
@@ -116,4 +139,5 @@ public abstract class BaseClient
     * Getters for BaseClient properties
     */
     public CredentialConfig MerchantConfig => this._merchantConfig;
+    protected string PciPgHostUrl => this._envConfig.PciPgHostUrl;
 }

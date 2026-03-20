@@ -22,18 +22,21 @@ public static class BaseUrl
         [Env.PRODUCTION] = new Dictionary<string, string>
         {
             [UrlConstants.PG_HOST_URL] = "https://api.phonepe.com/apis/pg",
+            [UrlConstants.PCI_PG_HOST_URL] = "https://cards.phonepe.com/apis/pg",
             [UrlConstants.OAUTH_HOST_URL] = "https://api.phonepe.com/apis/identity-manager",
             [UrlConstants.EVENTS_HOST_URL] = "https://api.phonepe.com/apis/pg-ingestion"
         },
         [Env.SANDBOX] = new Dictionary<string, string>
         {
             [UrlConstants.PG_HOST_URL] = "https://api-preprod.phonepe.com/apis/pg-sandbox",
+            [UrlConstants.PCI_PG_HOST_URL] = "https://api-preprod.phonepe.com/apis/pg-sandbox",
             [UrlConstants.OAUTH_HOST_URL] = "https://api-preprod.phonepe.com/apis/pg-sandbox",
             [UrlConstants.EVENTS_HOST_URL] = "http://localhost"
         },
         [Env.TESTING] = new Dictionary<string, string>
         {
             [UrlConstants.PG_HOST_URL] = "http://localhost:30415",
+            [UrlConstants.PCI_PG_HOST_URL] = "http://localhost:30415",
             [UrlConstants.OAUTH_HOST_URL] = "http://localhost:30415",
             [UrlConstants.EVENTS_HOST_URL] = "http://localhost:30415"
         }

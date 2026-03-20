@@ -19,13 +19,15 @@ public class EnvConfig
 {
     public Env EnvType { get; }
     public string PgHostUrl { get; }
+    public string PciPgHostUrl { get; }
     public string OAuthHostUrl { get; }
     public string EventsHostUrl { get; }
 
-    private EnvConfig(Env envType, string pgHostUrl, string oAuthHostUrl, string eventsHostUrl)
+    private EnvConfig(Env envType, string pgHostUrl, string pciPgHostUrl, string oAuthHostUrl, string eventsHostUrl)
     {
         EnvType = envType;
         PgHostUrl = pgHostUrl;
+        PciPgHostUrl = pciPgHostUrl;
         OAuthHostUrl = oAuthHostUrl;
         EventsHostUrl = eventsHostUrl;
     }
@@ -37,6 +39,7 @@ public class EnvConfig
             return new EnvConfig(
                 envType,
                 BaseUrl.GetUrl(envType, UrlConstants.PG_HOST_URL),
+                BaseUrl.GetUrl(envType, UrlConstants.PCI_PG_HOST_URL),
                 BaseUrl.GetUrl(envType, UrlConstants.OAUTH_HOST_URL),
                 BaseUrl.GetUrl(envType, UrlConstants.EVENTS_HOST_URL)
             );
@@ -46,6 +49,7 @@ public class EnvConfig
             return new EnvConfig(
                 Env.SANDBOX,
                 BaseUrl.GetUrl(Env.SANDBOX, UrlConstants.PG_HOST_URL),
+                BaseUrl.GetUrl(Env.SANDBOX, UrlConstants.PCI_PG_HOST_URL),
                 BaseUrl.GetUrl(Env.SANDBOX, UrlConstants.OAUTH_HOST_URL),
                 BaseUrl.GetUrl(Env.SANDBOX, UrlConstants.EVENTS_HOST_URL)
             );

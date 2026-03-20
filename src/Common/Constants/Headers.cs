@@ -19,7 +19,7 @@ public class Headers
 {
   public static readonly string INTEGRATION = "API";
   public static readonly string API_VERSION = "V2";
-  public static readonly string SDK_VERSION = "2.1.2";
+  public static readonly string SDK_VERSION = "2.1.3";
   public static readonly string SDK_TYPE = "BACKEND_DOTNET_SDK";
   public static readonly string SOURCE = "x-source";
   public static readonly string SOURCE_VERSION = "x-source-version";
