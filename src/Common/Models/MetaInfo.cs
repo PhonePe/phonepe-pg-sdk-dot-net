@@ -141,7 +141,41 @@ public class MetaInfo(string? udf1, string? udf2, string? udf3, string? udf4, st
 
         public MetaInfo Build()
         {
+            ValidateSize("Udf1", _udf1, 256);
+            ValidateSize("Udf2", _udf2, 256);
+            ValidateSize("Udf3", _udf3, 256);
+            ValidateSize("Udf4", _udf4, 256);
+            ValidateSize("Udf5", _udf5, 256);
+            ValidateSize("Udf6", _udf6, 256);
+            ValidateSize("Udf7", _udf7, 256);
+            ValidateSize("Udf8", _udf8, 256);
+            ValidateSize("Udf9", _udf9, 256);
+            ValidateSize("Udf10", _udf10, 256);
+            ValidateSizeAndPattern("Udf11", _udf11, 50);
+            ValidateSizeAndPattern("Udf12", _udf12, 50);
+            ValidateSizeAndPattern("Udf13", _udf13, 50);
+            ValidateSizeAndPattern("Udf14", _udf14, 50);
+            ValidateSizeAndPattern("Udf15", _udf15, 50);
             return new MetaInfo(this._udf1, this._udf2, this._udf3, this._udf4, this._udf5, this._udf6, this._udf7, this._udf8, this._udf9, this._udf10, this._udf11, this._udf12, this._udf13, this._udf14, this._udf15);
+        }
+
+        private static void ValidateSize(string field, string? value, int max)
+        {
+            if (value != null && value.Length > max)
+                throw new ArgumentException($"{field} exceeds maximum allowed size of {max} characters");
+        }
+
+        private static readonly System.Text.RegularExpressions.Regex RestrictedPattern =
+            new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9_\- @.+]*$");
+
+        private static void ValidateSizeAndPattern(string field, string? value, int max)
+        {
+            if (value == null) return;
+            if (value.Length > max)
+                throw new ArgumentException($"{field} exceeds maximum allowed size of {max} characters");
+            if (!RestrictedPattern.IsMatch(value))
+                throw new ArgumentException(
+                    $"{field} should only contain alphanumeric characters, underscores, hyphens, spaces, @, ., and +");
         }
     }
 }
