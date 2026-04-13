@@ -18,6 +18,7 @@ namespace pg_sdk_dotnet.Common.Constants;
 public class UrlConstants
 {
     public static readonly string PG_HOST_URL = "PG_HOST_URL";
+    public static readonly string PCI_PG_HOST_URL = "PCI_PG_HOST_URL";
     public static readonly string OAUTH_HOST_URL = "OAUTH_HOST_URL";
     public static readonly string EVENTS_HOST_URL = "EVENTS_HOST_URL";
 }

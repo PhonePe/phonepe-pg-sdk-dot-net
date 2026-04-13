@@ -62,6 +62,7 @@ public class CustomCheckoutClient : BaseClient
     public async Task<CustomCheckoutPayResponse> Pay(PgPaymentRequest payRequest)
     {
         var url = CustomCheckoutConstants.PAY_API;
+        var hostUrl = IsPciInstrument(payRequest) ? this.PciPgHostUrl : null;
 
         try 
         {
@@ -69,13 +70,22 @@ public class CustomCheckoutClient : BaseClient
                 ? new Dictionary<string, string>(this._headers) { [Headers.X_DEVICE_OS] = payRequest.DeviceOS }
                 : this._headers;
 
-            var response =  await RequestViaAuthRefreshAsync<CustomCheckoutPayResponse, PgPaymentRequest>(
-                HttpMethodType.POST,
-                url,
-                requestHeaders,
-                Headers.APPLICATION_JSON,
-                payRequest
-            );
+            var response = hostUrl != null
+                ? await RequestViaAuthRefreshAsync<CustomCheckoutPayResponse, PgPaymentRequest>(
+                    HttpMethodType.POST,
+                    url,
+                    requestHeaders,
+                    Headers.APPLICATION_JSON,
+                    hostUrl,
+                    payRequest
+                )
+                : await RequestViaAuthRefreshAsync<CustomCheckoutPayResponse, PgPaymentRequest>(
+                    HttpMethodType.POST,
+                    url,
+                    requestHeaders,
+                    Headers.APPLICATION_JSON,
+                    payRequest
+                );
 
             return response;
         }
@@ -84,6 +94,15 @@ public class CustomCheckoutClient : BaseClient
             this._logger.LogError(ex, "Pay API Failed");
             throw;
         }
+    }
+
+    /*
+    * Returns true if the payment request uses a PCI instrument (Card or Token).
+    */
+    private static bool IsPciInstrument(PgPaymentRequest payRequest)
+    {
+        if (payRequest.PaymentFlow is not PgPaymentFlow pgFlow) return false;
+        return pgFlow.PaymentMode is CardPaymentV2Instrument || pgFlow.PaymentMode is TokenPaymentV2Instrument;
     }
 
 
