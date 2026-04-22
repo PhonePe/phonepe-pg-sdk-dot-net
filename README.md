@@ -9,7 +9,7 @@
 Install the dependency via the CLI:
 
 ```bash
-dotnet add package phonepe-pg-sdk-dotnet --version 2.1.2
+dotnet add package phonepe-pg-sdk-dotnet --version 2.1.3
 ```
 
 ---
