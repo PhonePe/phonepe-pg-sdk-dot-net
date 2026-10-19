@@ -24,4 +24,5 @@ public class AccountInstrumentV2 : PaymentInstrumentV2
     public string? AccountHolderName { get; set; }
     public string? AccountType { get; set; }
     public string? UnmaskedAccountNumber { get; set; }
+    public string? ProviderAccountType { get; set; }
 }

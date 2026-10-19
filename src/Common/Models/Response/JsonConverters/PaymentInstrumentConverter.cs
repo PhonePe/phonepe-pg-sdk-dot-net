@@ -33,7 +33,7 @@ public class PaymentInstrumentConverter : JsonConverter<PaymentInstrumentV2>
         var type = typeProperty.GetString();
         return type switch
         {
-            "ACCOUNT" => JsonSerializer.Deserialize<AccountInstrumentV2>(root.GetRawText(), options),
+            "ACCOUNT" or "CREDIT_LINE" => JsonSerializer.Deserialize<AccountInstrumentV2>(root.GetRawText(), options),
             "CREDIT_CARD" => JsonSerializer.Deserialize<CreditCardPaymentInstrumentV2>(root.GetRawText(), options),
             "DEBIT_CARD" => JsonSerializer.Deserialize<DebitCardPaymentInstrumentV2>(root.GetRawText(), options),
             "EGV" => JsonSerializer.Deserialize<EgvPaymentInstrumentV2>(root.GetRawText(), options),

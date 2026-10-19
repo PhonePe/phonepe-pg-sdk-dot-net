@@ -26,5 +26,6 @@ public enum PaymentInstrumentType
     ACCOUNT,
     CREDIT_CARD,
     DEBIT_CARD,
-    NET_BANKING
+    NET_BANKING,
+    CREDIT_LINE
 }
