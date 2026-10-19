@@ -146,5 +146,56 @@ public class PaymentInstrumentsTests : BaseSetupWithOAuth
             JsonSerializer.Deserialize<PaymentInstrumentV2>(json, JsonOptions.PaymentInstrumentDeserialization);
         });
     }
-}
 
+    [Test, Order(8)]
+    public void Deserialize_AccountInstrumentV2_WithProviderAccountType()
+    {
+        var json = """
+        {
+            "type": "ACCOUNT",
+            "maskedAccountNumber": "XXXXXXXXXXXX1234",
+            "ifsc": "IFSC0001234",
+            "accountHolderName": "NAME",
+            "accountType": "SAVINGS",
+            "providerAccountType": "CREDITLINE"
+        }
+        """;
+
+        var result = JsonSerializer.Deserialize<PaymentInstrumentV2>(json, JsonOptions.PaymentInstrumentDeserialization);
+
+        Assert.That(result, Is.InstanceOf<AccountInstrumentV2>());
+        var account = (AccountInstrumentV2)result!;
+        Assert.That(account.Type, Is.EqualTo(ResponsePaymentInstrumentType.ACCOUNT));
+        Assert.That(account.MaskedAccountNumber, Is.EqualTo("XXXXXXXXXXXX1234"));
+        Assert.That(account.Ifsc, Is.EqualTo("IFSC0001234"));
+        Assert.That(account.AccountHolderName, Is.EqualTo("NAME"));
+        Assert.That(account.AccountType, Is.EqualTo("SAVINGS"));
+        Assert.That(account.ProviderAccountType, Is.EqualTo("CREDITLINE"));
+    }
+
+    [Test, Order(9)]
+    public void Deserialize_CreditLineInstrument_MapsToAccountInstrumentV2()
+    {
+        var json = """
+        {
+            "type": "CREDIT_LINE",
+            "maskedAccountNumber": "XXXXXXXXXXXX1234",
+            "ifsc": "IFSC0001234",
+            "accountHolderName": "NAME",
+            "accountType": "SAVINGS",
+            "providerAccountType": "CREDITLINE"
+        }
+        """;
+
+        var result = JsonSerializer.Deserialize<PaymentInstrumentV2>(json, JsonOptions.PaymentInstrumentDeserialization);
+
+        Assert.That(result, Is.InstanceOf<AccountInstrumentV2>());
+        var account = (AccountInstrumentV2)result!;
+        Assert.That(account.Type, Is.EqualTo(ResponsePaymentInstrumentType.CREDIT_LINE));
+        Assert.That(account.MaskedAccountNumber, Is.EqualTo("XXXXXXXXXXXX1234"));
+        Assert.That(account.Ifsc, Is.EqualTo("IFSC0001234"));
+        Assert.That(account.AccountHolderName, Is.EqualTo("NAME"));
+        Assert.That(account.AccountType, Is.EqualTo("SAVINGS"));
+        Assert.That(account.ProviderAccountType, Is.EqualTo("CREDITLINE"));
+    }
+}
